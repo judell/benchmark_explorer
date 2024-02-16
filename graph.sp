@@ -128,7 +128,8 @@ dashboard "benchmarks_and_controls" {
           jsonb_build_object(
             'control_id', control_id,
             'resource', coalesce(resource, 'No Resource'),
-            'status', status
+            'status', status,
+            'reason', reason
           ) as properties
         from
           csv.benchmarks

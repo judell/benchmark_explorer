@@ -31,20 +31,6 @@ dashboard "controls" {
           EOQ
       }
 
-/*
-      input "status" {
-        width = 4
-        title = "status"
-        sql   = <<EOQ
-            select distinct 
-              status as label,
-              status as value
-            from cis_v200
-            order by status
-          EOQ
-      }
-  */
-
     }
 
     container {
@@ -52,7 +38,7 @@ dashboard "controls" {
       table {
         args = [self.input.control] #, self.input.status]
         sql  = <<EOQ
-            select resource, title as benchmark, status, account_id, region
+            select resource, title as benchmark, status, reason, account_id, region
             from cis_v200 
             where control_title = $1
           EOQ

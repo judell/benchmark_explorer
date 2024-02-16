@@ -16,7 +16,7 @@ dashboard "search" {
       table {
         args = [self.input.search_term]
         sql = <<EOQ
-        select  status, resource, title as benchmark, control_title, control_description
+        select  status, resource, title as benchmark, control_title, reason, control_description
         from cis_v200
         where 
           title ~* $1 or

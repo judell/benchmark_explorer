@@ -11,7 +11,7 @@ dashboard "controls" {
       width = 8
       sql   = <<EOQ
           select control_title, count(*) 
-          from cis_v200
+          from csv.benchmarks
           group by control_title
           order by count
         EOQ
@@ -26,7 +26,7 @@ dashboard "controls" {
             select distinct
               control_title as label,
               control_title as value
-            from cis_v200
+            from csv.benchmarks
             order by control_title
           EOQ
       }
@@ -39,7 +39,7 @@ dashboard "controls" {
         args = [self.input.control] #, self.input.status]
         sql  = <<EOQ
             select resource, title as benchmark, status, reason, account_id, region
-            from cis_v200 
+            from csv.benchmarks 
             where control_title = $1
           EOQ
         column "control_title" {

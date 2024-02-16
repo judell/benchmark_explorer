@@ -1,5 +1,14 @@
 dashboard "benchmarks_and_controls" {
 
+  title = "Benchmark explorer: graph"
+
+  container {
+    card {
+      width = 2
+      sql = "select distinct (regexp_match(group_id, 'aws_thrifty'))[1] as mod from csv.benchmarks;"
+    }
+  }
+
   input "benchmark" {
     width = 4
     sql = <<EOQ
@@ -17,6 +26,16 @@ dashboard "benchmarks_and_controls" {
   graph {
     title = "Benchmark explorer: graph"
 
+    category "control" {
+      color = "black"
+      icon = "cog-6-tooth"
+    }
+
+    category "benchmark" {
+      color = "black"
+      icon = "rectangle-stack"
+    }
+
     category "alarm" {
       icon = "warning"
       color = "red"
@@ -29,7 +48,7 @@ dashboard "benchmarks_and_controls" {
 
     category "info" {
       icon = "information-circle"
-      color = "white"
+      color = "lightblue"
     }
 
     category "error" {
@@ -42,16 +61,13 @@ dashboard "benchmarks_and_controls" {
       color = "orange"
     }
 
-
-
-
     node {
       args = [self.input.benchmark]
-      category = category.benchmark
       sql = <<EOQ
         select distinct 
           group_id as id,
           title,
+          'benchmark' as category,
           jsonb_build_object(
             'ok', ( select count(*) from csv.benchmarks where group_id = $1 and status = 'ok'),
             'alarm', ( select count(*) from csv.benchmarks where group_id = $1 and status = 'alarm'),
@@ -67,11 +83,11 @@ dashboard "benchmarks_and_controls" {
 
     node {
       args = [self.input.benchmark]
-      category = category.control
-      sql = <<EOQ
+        sql = <<EOQ
         select 
           control_id as id,
           control_id as title,
+          'control' as category,
           jsonb_build_object(
             'title', control_id,
             'ok', count(*) filter (where status = 'ok'),

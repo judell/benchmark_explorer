@@ -2,6 +2,11 @@ dashboard "controls" {
 
   title = "Benchmark explorer: explore results by control"
 
+  card {
+    width = 2
+    sql = "select distinct (regexp_match(group_id, 'aws_thrifty'))[1] as mod from csv.benchmarks;"
+  }
+
 
   container {
     title = "controls"

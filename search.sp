@@ -2,6 +2,11 @@ dashboard "search" {
 
   title = "Benchmark explorer: search the results"
 
+  card {
+    width = 2
+    sql = "select distinct (regexp_match(group_id, 'aws_thrifty'))[1] as mod from csv.benchmarks;"
+  }
+
   container {
   
     input "search_term" {
@@ -16,7 +21,7 @@ dashboard "search" {
       table {
         args = [self.input.search_term]
         sql = <<EOQ
-        select  status, resource, title as benchmark, control_title, reason, control_description
+        select  status, resource, reason, title as benchmark, control_title, control_description
         from cis_v200
         where 
           title ~* $1 or
@@ -25,9 +30,20 @@ dashboard "search" {
           reason ~* $1
 
         EOQ
+        column "resource" {
+          wrap = "all"
+        }
+        column "reason" {
+          wrap = "all"
+        }
+        column "control_title" {
+          wrap = "all"
+        }
         column "control_description" {
           wrap = "all"
         }
+
+
 
       }
 
